@@ -5,141 +5,247 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<title>atomic-tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Atomic Tracker</title>
 <style>
+/* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{background:#FEF1D5;color:#03110D;font-family:'DM Sans',sans-serif;font-size:clamp(14px,2.2vw,16px);line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+body{background:#FEF1D5;color:#03110D;font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
 :root{--cr:#FEF1D5;--sl:#E0E0E0;--bl:#679CBC;--tn:#A38560;--rd:#C11720;--nv:#0C324A;--fo:#16302B;--bg:#390517;--bk:#03110D;--nh:62px}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:#FEF1D5}
-::-webkit-scrollbar-thumb{background:#E0E0E0;border-radius:2px}
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:#FEF1D5}::-webkit-scrollbar-thumb{background:#E0E0E0;border-radius:2px}
+
+/* ── APP SHELL ── */
 #app{width:100%;max-width:600px;margin:0 auto;min-height:100vh;padding-bottom:var(--nh)}
-#hud{background:#0C324A;padding:14px 18px 12px;position:sticky;top:0;z-index:100}
-.ht{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+
+/* ── HEADER ── */
+#hud{background:#FEF1D5;padding:14px 20px 12px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(3,17,13,.08)}
+.ht{display:flex;align-items:center;gap:12px;margin-bottom:11px}
 .aw{position:relative;flex-shrink:0;cursor:pointer}
-.awi{width:48px;height:48px;object-fit:cover;border-radius:50%;border:2px solid #679CBC;display:block}
-.awo{position:absolute;inset:0;border-radius:50%;background:rgba(103,156,188,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.awi{width:42px;height:42px;object-fit:cover;border-radius:50%;border:1.5px solid rgba(103,156,188,.35);display:block}
+.awo{position:absolute;inset:0;border-radius:50%;background:rgba(103,156,188,.3);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
 .aw:active .awo{opacity:1}
-.awl{position:absolute;bottom:-2px;right:-2px;background:#679CBC;color:#0C324A;font-size:10px;font-weight:800;padding:1px 5px;border-radius:10px;line-height:1.4}
+.awl{position:absolute;bottom:-2px;right:-2px;background:#679CBC;color:#FEF1D5;font-size:9px;font-weight:700;padding:1px 4px;border-radius:8px;line-height:1.4;letter-spacing:.3px}
 #avf{display:none}
 .hi{flex:1;min-width:0}
-.hn{font-size:clamp(15px,3vw,19px);font-weight:800;color:#FEF1D5;letter-spacing:-.3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hk{font-size:clamp(10px,1.5vw,12px);color:#679CBC;font-weight:500;margin-top:1px}
-.hr{display:flex;gap:16px;flex-shrink:0}
+.hg{font-size:10px;font-weight:500;color:#A38560;letter-spacing:1.5px;text-transform:uppercase;display:block;line-height:1;margin-bottom:3px}
+.hn{font-size:18px;font-weight:700;color:#03110D;letter-spacing:-.4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
+.hr{display:flex;gap:18px;flex-shrink:0;align-items:center}
 .hsi{text-align:right}
-.hsl{font-size:clamp(9px,1.3vw,10px);color:rgba(254,241,213,.5);font-weight:600;display:block;text-transform:uppercase;letter-spacing:1px}
-.hsv{font-size:clamp(14px,2.2vw,17px);font-weight:700;color:#FEF1D5;line-height:1.2}
-.hbg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.brow{display:flex;justify-content:space-between;margin-bottom:4px}
-.blbl{font-size:clamp(9px,1.3vw,10px);font-weight:600;text-transform:uppercase;letter-spacing:1px;color:rgba(254,241,213,.55)}
-.btr{height:5px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden}
-.bfl{height:100%;border-radius:3px;transition:width .6s ease}
-#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:600px;background:#0C324A;display:grid;grid-template-columns:repeat(4,1fr);z-index:100;height:var(--nh);border-top:1px solid rgba(103,156,188,.15)}
-.nb{background:transparent;border:none;font-family:'DM Sans',sans-serif;font-weight:600;font-size:clamp(9px,1.4vw,11px);letter-spacing:.3px;text-transform:uppercase;color:rgba(254,241,213,.4);padding:6px 0 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:relative;transition:color .15s}
-.nb svg{width:21px;height:21px;opacity:.4;transition:opacity .15s}
-.nb.on{color:#FEF1D5}
-.nb.on svg{opacity:1}
-.nb.on::after{content:'';position:absolute;top:0;left:15%;right:15%;height:2px;background:#679CBC}
-.tp{padding:16px;animation:fi .18s ease}
-.cd{background:#E0E0E0;border-radius:4px;padding:16px;margin-bottom:14px}
-.ck{background:#0C324A;border-radius:4px;padding:16px;margin-bottom:14px}
-.seclbl{font-size:clamp(10px,1.5vw,11px);font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#A38560;display:block;margin-bottom:12px}
-.lc1{color:#0C324A} .lg1{background:rgba(12,50,74,.1)}   .lk1{background:#0C324A}
-.lc2{color:#679CBC} .lg2{background:rgba(103,156,188,.12)} .lk2{background:#679CBC}
-.lc3{color:#16302B} .lg3{background:rgba(22,48,43,.1)}   .lk3{background:#16302B}
-.lc4{color:#C11720} .lg4{background:rgba(193,23,32,.1)}  .lk4{background:#C11720}
-.tag{font-size:clamp(9px,1.4vw,11px);font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:.3px}
-.tge{background:rgba(163,133,96,.15);color:#A38560}
-.tgd{background:rgba(103,156,188,.15);color:#679CBC}
-.tgc{background:rgba(12,50,74,.12);color:#0C324A}
-.tgb{background:rgba(57,5,23,.12);color:#390517}
-.tga{background:rgba(193,23,32,.12);color:#C11720}
-.tgs{background:rgba(193,23,32,.18);color:#C11720;outline:1px solid #C11720}
-.tgst{font-size:clamp(9px,1.4vw,11px);color:#A38560;font-weight:500}
-.tkc{background:#FEF1D5;border-radius:3px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;border-left:3px solid transparent;transition:opacity .15s}
-.tkc.dn{opacity:.42}
-.tkc.dn .tkn{text-decoration:line-through;color:#A38560}
-.tkb{flex:1;min-width:0}
-.tkn{font-size:clamp(13px,2vw,15px);font-weight:600;margin-bottom:3px;overflow-wrap:break-word;word-break:break-word}
-.tkt{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.crdot{width:6px;height:6px;border-radius:50%;background:#C11720;flex-shrink:0}
-.ebtn{font-family:'DM Sans',sans-serif;font-size:clamp(10px,1.5vw,12px);font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:7px 13px;background:transparent;color:#0C324A;border:1.5px solid #0C324A;cursor:pointer;border-radius:2px;flex-shrink:0;white-space:nowrap;transition:all .15s;-webkit-appearance:none}
-.ebtn:active:not(:disabled){background:#0C324A;color:#FEF1D5}
-.ebtn:disabled{opacity:.28;cursor:default}
-.lwhd{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:8px;border-radius:3px}
-.lwnum{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;color:#FEF1D5}
-.lwt{flex:1}
-.lwnm{font-size:clamp(12px,1.9vw,14px);font-weight:700}
-.lwds{font-size:clamp(10px,1.5vw,12px);opacity:.75;margin-top:1px}
-.sgcard{background:#0C324A;border-radius:4px;padding:16px;margin-bottom:14px}
-.sgn{font-size:clamp(18px,3vw,23px);font-weight:800;color:#FEF1D5;letter-spacing:-.4px;margin-bottom:3px}
-.sgo{font-size:clamp(12px,1.9vw,14px);color:rgba(254,241,213,.6);margin-bottom:14px;line-height:1.5}
-.sgd{font-size:clamp(28px,5vw,38px);font-weight:800;color:#679CBC;line-height:1}
-.sgdl{font-size:clamp(9px,1.4vw,11px);font-weight:600;color:rgba(254,241,213,.45);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-.mscard{background:#FEF1D5;border-radius:3px;padding:13px;margin-bottom:8px}
-.msn{font-size:clamp(13px,2vw,15px);font-weight:700;color:#0C324A;margin-bottom:3px}
-.msd{font-size:clamp(11px,1.7vw,13px);color:#A38560;margin-bottom:8px;line-height:1.4}
-.statrow{margin-bottom:12px}
-.stattop{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-weight:600;font-size:clamp(12px,1.9vw,14px)}
-.statr{height:5px;background:rgba(12,50,74,.1);border-radius:3px;overflow:hidden}
-.statf{height:100%;border-radius:3px;transition:width .6s ease}
-.hbars{display:flex;align-items:flex-end;gap:6px;height:90px}
-.hbw{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px}
-.hbar{width:100%;border-radius:2px 2px 0 0}
-.hday{font-size:clamp(8px,1.3vw,10px);font-weight:600;color:#A38560}
-.logrow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(12,50,74,.08)}
-.logrow:last-child{border-bottom:none}
-.logdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.logdt{font-size:clamp(12px,1.9vw,14px);font-weight:600;margin-left:10px}
-.logsb{font-size:clamp(10px,1.5vw,12px);color:#A38560;margin-left:10px}
-.logri{text-align:right}
-.logxp{font-size:clamp(13px,2vw,15px);font-weight:700;color:#679CBC}
-.logpc{font-size:clamp(10px,1.5vw,11px);font-weight:700}
-.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
-.sumcell{background:#E0E0E0;border-radius:4px;padding:14px 10px;text-align:center}
-.sumv{font-size:clamp(18px,3vw,24px);font-weight:800;line-height:1;color:#0C324A}
-.suml{font-size:clamp(9px,1.3vw,10px);font-weight:700;color:#A38560;text-transform:uppercase;letter-spacing:1px;display:block;margin-top:4px}
-.difgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
-.difbox{background:#FEF1D5;border-radius:3px;padding:10px;text-align:center}
-.flbl{font-size:clamp(10px,1.5vw,12px);font-weight:700;color:#0C324A;text-transform:uppercase;letter-spacing:1.5px;display:block;margin-bottom:6px}
-.finp{background:#FEF1D5;border:1.5px solid rgba(12,50,74,.2);color:#03110D;font-family:'DM Sans',sans-serif;font-size:clamp(13px,2vw,15px);padding:10px 14px;width:100%;outline:none;border-radius:3px;transition:border-color .15s;-webkit-appearance:none}
-.finp:focus{border-color:#679CBC}
-textarea.finp{resize:none;line-height:1.5}
-.pbtn{background:#0C324A;color:#FEF1D5;border:none;font-family:'DM Sans',sans-serif;font-weight:700;font-size:clamp(12px,1.9vw,14px);letter-spacing:.3px;text-transform:uppercase;padding:11px 22px;cursor:pointer;border-radius:3px;display:inline-flex;align-items:center;gap:7px;transition:all .15s;-webkit-appearance:none}
-.pbtn:active:not(:disabled){background:#16302B}
-.pbtn:disabled{opacity:.4;cursor:not-allowed}
-.sbtn{background:transparent;border:1.5px solid rgba(12,50,74,.25);color:#0C324A;font-family:'DM Sans',sans-serif;font-weight:600;font-size:clamp(10px,1.5vw,12px);letter-spacing:.3px;padding:7px 14px;cursor:pointer;border-radius:3px;-webkit-appearance:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
-.sbtn:active{background:#E0E0E0}
-.dbtn{background:transparent;color:#C11720;border:1.5px solid #C11720;font-family:'DM Sans',sans-serif;font-weight:600;font-size:clamp(10px,1.5vw,12px);padding:9px 16px;cursor:pointer;border-radius:3px;-webkit-appearance:none;display:inline-flex;align-items:center;gap:6px}
-.frow{display:flex;gap:8px;align-items:flex-start}
-.igrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.icell{background:#FEF1D5;border-radius:3px;padding:11px 13px}
-.icll{font-size:clamp(9px,1.4vw,11px);font-weight:700;color:#A38560;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:3px}
-.iclv{font-size:clamp(13px,2vw,15px);font-weight:600;color:#0C324A}
-.propbox{border:2px solid #679CBC;background:rgba(103,156,188,.06);border-radius:4px;padding:16px;margin-top:14px;animation:pi .28s ease}
-.propt{font-size:clamp(17px,2.8vw,21px);font-weight:800;color:#0C324A;margin-bottom:3px;letter-spacing:-.3px}
-.props{font-size:clamp(12px,1.9vw,14px);color:#A38560;margin-bottom:14px}
-.proptk{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:clamp(12px,1.9vw,14px)}
-.tglbtn{width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;border:none;padding:0;transition:background .2s;flex-shrink:0}
-.tgldot{width:18px;height:18px;background:#FEF1D5;border-radius:9px;position:absolute;top:3px;transition:left .2s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.pmbox{background:#FEF1D5;border:1.5px solid rgba(12,50,74,.15);border-radius:3px;padding:13px;font-family:'DM Sans',sans-serif;font-size:clamp(10px,1.5vw,12px);color:#16302B;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-height:200px;overflow-y:auto;margin-bottom:10px}
-.empt{text-align:center;padding:28px 16px;border:1.5px dashed rgba(12,50,74,.2);border-radius:4px}
-.emtl{font-size:clamp(12px,1.9vw,14px);font-weight:700;color:#0C324A;display:block;margin-bottom:6px}
-.emth{font-size:clamp(12px,1.9vw,14px);color:#679CBC;font-weight:500}
-#toast{position:fixed;top:76px;left:50%;transform:translateX(-50%);color:#FEF1D5;padding:9px 20px;z-index:999;pointer-events:none;white-space:nowrap;display:none;border-radius:3px;font-size:clamp(11px,1.7vw,13px);font-weight:600;letter-spacing:.3px;box-shadow:0 4px 16px rgba(12,50,74,.3)}
-.errmsg{color:#C11720;font-size:clamp(11px,1.6vw,13px);font-weight:500;margin-top:8px;display:none;padding:8px 0}
-.divider{height:1px;background:rgba(12,50,74,.1);margin:12px 0}
-.obbanner{background:rgba(193,23,32,.07);border:1.5px solid rgba(193,23,32,.28);border-radius:3px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.obbanner span{font-size:clamp(11px,1.7vw,13px);font-weight:600;color:#C11720}
-@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.hsl{font-size:10px;color:#A38560;font-weight:500;display:block;text-transform:uppercase;letter-spacing:1px;line-height:1;margin-bottom:2px}
+.hsv{font-size:17px;font-weight:700;color:#03110D;line-height:1.1;display:block}
+.hbg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.brow{display:flex;justify-content:space-between;margin-bottom:5px}
+.blbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:#A38560}
+.btr{height:3px;background:#E0E0E0;border-radius:2px;overflow:hidden}
+.bfl{height:100%;border-radius:2px;transition:width .6s ease}
+
+/* ── BOTTOM NAV ── */
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:600px;background:#FEF1D5;display:grid;grid-template-columns:repeat(4,1fr);z-index:100;height:var(--nh);border-top:1px solid rgba(3,17,13,.09)}
+.nb{background:transparent;border:none;font-family:inherit;font-weight:500;font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:#A38560;padding:8px 0 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;transition:color .15s}
+.nb svg{width:20px;height:20px;opacity:.3;transition:opacity .15s;stroke:#03110D;fill:none}
+.nb.on{color:#03110D}
+.nb.on svg{opacity:1;stroke:#679CBC}
+.nb.on::after{content:'';position:absolute;top:0;left:22%;right:22%;height:1.5px;background:#679CBC}
+
+/* ── PAGES ── */
+.tp{padding:24px 0 20px;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pi{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
 @keyframes hlp{0%,100%{opacity:1}50%{opacity:.25}}
-.hlp{animation:hlp 1s ease-in-out infinite}
-@media(max-width:360px){.hr{gap:10px}.nb span{display:none}}
-@media(min-width:600px){.tp{padding:20px}#hud{padding:16px 22px 13px}}
+.hlp{animation:hlp 1.2s ease-in-out infinite}
+
+/* ── PADDED CONTAINER ── */
+.px{padding-left:20px;padding-right:20px}
+
+/* ── CARDS ── */
+.cd{background:#E0E0E0;border-radius:0;padding:20px;margin-bottom:2px}
+.ck{background:#0C324A;border-radius:0;padding:20px;margin-bottom:2px}
+.cdw{margin-bottom:2px}  /* no horizontal offset — cards go full-width */
+
+/* ── SECTION LABEL ── */
+.seclbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:#A38560;display:block;margin-bottom:14px}
+
+/* ── HERO NUMBER ── */
+.hero{padding:0 20px;margin-bottom:28px}
+.hero-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:#A38560;display:block;margin-bottom:7px}
+.hero-num{display:block;line-height:.85;letter-spacing:-4px}
+.hero-num .n{font-size:80px;font-weight:300;color:#679CBC}
+.hero-num .u{font-size:34px;font-weight:300;color:rgba(103,156,188,.5);letter-spacing:0;vertical-align:top;margin-top:8px;display:inline-block}
+.hero-sub{font-size:11px;font-weight:500;color:#A38560;text-transform:uppercase;letter-spacing:2.5px;margin-top:12px;display:block}
+
+/* ── SAGA CARD (dark) ── */
+.sgcard{background:#0C324A;padding:20px 20px 18px;margin-bottom:0}
+.sgcard-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:rgba(254,241,213,.3);display:block;margin-bottom:12px}
+.sgn{font-size:20px;font-weight:600;color:#FEF1D5;letter-spacing:-.3px;margin-bottom:3px;line-height:1.2}
+.sgo{font-size:13px;color:rgba(254,241,213,.42);margin-bottom:18px;line-height:1.6}
+.sgd{font-size:52px;font-weight:300;color:#679CBC;line-height:1;letter-spacing:-2px}
+.sgdl{font-size:10px;font-weight:500;color:rgba(254,241,213,.28);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px}
+.sgbar{height:1px;background:rgba(255,255,255,.1);overflow:hidden;margin:16px 0 7px}
+.sgbar-fill{height:100%;background:#679CBC;transition:width .6s ease}
+.sgmeta{display:flex;justify-content:space-between}
+.sgmeta span{font-size:10px;font-weight:500;color:rgba(254,241,213,.28);text-transform:uppercase;letter-spacing:1px}
+
+/* ── MISSION CARD COMPONENT ──
+   Full-width, border-radius:0, 80–100px adaptive height
+   Top: law tag + count  /  Center: name + bar  /  Bottom: desc + tasks
+─────────────────────────────── */
+.mcrd-list{width:100%;border-top:1px solid rgba(3,17,13,.07)}
+.mcrd{
+  width:100%;border-radius:0;
+  min-height:84px;
+  background:#FEF1D5;
+  border-bottom:1px solid rgba(3,17,13,.07);
+  padding:15px 20px;
+  position:relative
+}
+.mcrd:last-child{border-bottom:none}
+/* Top row */
+.mcrd-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
+.mcrd-info{flex:1;min-width:0}
+.mcrd-meta{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.mcrd-law-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#FEF1D5;padding:2px 7px;border-radius:0;display:inline-block;flex-shrink:0}
+.mcrd-done-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#FEF1D5;background:#16302B;padding:2px 7px;border-radius:0;display:inline-block;flex-shrink:0}
+.mcrd-name{font-size:14px;font-weight:600;color:#03110D;line-height:1.3;margin-bottom:4px}
+.mcrd-desc{font-size:12px;color:#A38560;line-height:1.5;margin-bottom:10px}
+.mcrd-bar{height:2px;background:rgba(3,17,13,.08);overflow:hidden;margin-bottom:0}
+.mcrd-fill{height:100%;transition:width .5s ease}
+/* Right: count + incr */
+.mcrd-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
+.mcrd-count{font-size:15px;font-weight:700;letter-spacing:-.3px;line-height:1}
+.mcrd-incr{background:transparent;border:1px solid rgba(3,17,13,.2);color:#03110D;font-family:inherit;font-size:16px;font-weight:300;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:4px;flex-shrink:0;-webkit-appearance:none;transition:all .15s;line-height:1}
+.mcrd-incr:active{background:#E0E0E0}
+.mcrd-incr:disabled{opacity:.18;cursor:default}
+/* Task area inside card */
+.mcrd-tasks{border-top:1px solid rgba(3,17,13,.06);padding-top:10px;margin-top:12px}
+.mcrd-section-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:#A38560;padding:14px 20px 10px;display:block;border-bottom:1px solid rgba(3,17,13,.06)}
+
+/* ── TASK ROWS ── */
+/* In-card task (transparent bg) */
+.tkc{background:transparent;padding:9px 0;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(3,17,13,.05);transition:opacity .15s}
+.tkc:last-child{border-bottom:none}
+.tkc.dn{opacity:.36}
+.tkc.dn .tkn{text-decoration:line-through;color:#A38560}
+/* Flat task (gray bg, full width) */
+.tkf{background:#E0E0E0;padding:12px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(3,17,13,.06);transition:opacity .15s}
+.tkf:last-child{border-bottom:none}
+.tkf.dn{opacity:.36}
+.tkf.dn .tkn{text-decoration:line-through;color:#A38560}
+.tkb{flex:1;min-width:0}
+.tkn{font-size:13px;font-weight:500;margin-bottom:4px;overflow-wrap:break-word;word-break:break-word;color:#03110D;line-height:1.35}
+.tkt{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.crdot{width:5px;height:5px;border-radius:50%;background:#C11720;flex-shrink:0}
+
+/* ── TAGS ── */
+.tag{font-size:9px;font-weight:700;padding:2px 5px;border-radius:2px;letter-spacing:.4px;text-transform:uppercase}
+.tge{background:rgba(163,133,96,.14);color:#A38560}
+.tgd{background:rgba(103,156,188,.14);color:#679CBC}
+.tgc{background:rgba(12,50,74,.1);color:#0C324A}
+.tgb{background:rgba(57,5,23,.1);color:#390517}
+.tga{background:rgba(193,23,32,.1);color:#C11720}
+.tgs{background:rgba(193,23,32,.12);color:#C11720;outline:1px solid rgba(193,23,32,.3)}
+.tgst{font-size:11px;color:rgba(163,133,96,.62);font-weight:400}
+
+/* ── LAW HEADERS ── */
+.lwhd{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:6px;border-radius:8px}
+.lwnum{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#FEF1D5}
+.lwt{flex:1}
+.lwnm{font-size:12px;font-weight:600;line-height:1.2}
+.lwds{font-size:11px;opacity:.6;margin-top:1px}
+.lc1{color:#0C324A}.lg1{background:rgba(12,50,74,.08)}.lk1{background:#0C324A}
+.lc2{color:#679CBC}.lg2{background:rgba(103,156,188,.1)}.lk2{background:#679CBC}
+.lc3{color:#16302B}.lg3{background:rgba(22,48,43,.08)}.lk3{background:#16302B}
+.lc4{color:#C11720}.lg4{background:rgba(193,23,32,.08)}.lk4{background:#C11720}
+
+/* ── BUTTONS ── */
+.ebtn{font-family:inherit;font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;padding:6px 11px;background:transparent;color:#679CBC;border:1px solid rgba(103,156,188,.32);cursor:pointer;border-radius:5px;flex-shrink:0;white-space:nowrap;transition:all .15s;-webkit-appearance:none}
+.ebtn:active:not(:disabled){background:rgba(103,156,188,.1)}
+.ebtn:disabled{opacity:.18;cursor:default}
+.pbtn{background:#0C324A;color:#FEF1D5;border:none;font-family:inherit;font-weight:600;font-size:12px;letter-spacing:.4px;text-transform:uppercase;padding:11px 20px;cursor:pointer;border-radius:8px;display:inline-flex;align-items:center;gap:7px;transition:all .15s;-webkit-appearance:none}
+.pbtn:active:not(:disabled){background:#16302B}
+.pbtn:disabled{opacity:.35;cursor:not-allowed}
+.sbtn{background:transparent;border:1px solid rgba(3,17,13,.18);color:#03110D;font-family:inherit;font-weight:500;font-size:11px;letter-spacing:.3px;padding:7px 12px;cursor:pointer;border-radius:6px;-webkit-appearance:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.sbtn:active{background:#E0E0E0}
+.dbtn{background:transparent;color:#C11720;border:1px solid rgba(193,23,32,.28);font-family:inherit;font-weight:500;font-size:11px;padding:9px 14px;cursor:pointer;border-radius:6px;-webkit-appearance:none;display:inline-flex;align-items:center;gap:6px}
+
+/* ── STAT BIG GRID ── */
+.stat-big-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:2px}
+.stat-big-cell{background:#E0E0E0;border-radius:0;padding:18px 16px 14px}
+.stat-big-num{font-size:44px;font-weight:300;line-height:1;letter-spacing:-2px;display:block;margin-bottom:5px}
+.stat-big-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:#A38560;display:block}
+
+/* ── SUMMARY GRID ── */
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:2px}
+.sumcell{background:#E0E0E0;border-radius:0;padding:16px 10px;text-align:center}
+.sumv{font-size:26px;font-weight:300;line-height:1;color:#03110D;letter-spacing:-1px}
+.suml{font-size:9px;font-weight:600;color:#A38560;text-transform:uppercase;letter-spacing:1.5px;display:block;margin-top:5px}
+
+/* ── HISTORY BARS ── */
+.hbars{display:flex;align-items:flex-end;gap:5px;height:68px;margin:4px 0 6px}
+.hbw{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:5px}
+.hbar{width:100%;border-radius:1px 1px 0 0}
+.hday{font-size:10px;font-weight:500;color:#A38560}
+
+/* ── LOG ROW ── */
+.logrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(3,17,13,.06)}
+.logrow:last-child{border-bottom:none}
+.logdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.logdt{font-size:13px;font-weight:500;margin-left:10px;color:#03110D}
+.logsb{font-size:11px;color:#A38560;margin-left:10px;margin-top:1px}
+.logri{text-align:right}
+.logxp{font-size:14px;font-weight:600;color:#679CBC}
+.logpc{font-size:11px;font-weight:500}
+
+/* ── PROFILE GRID ── */
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.icell{background:#FEF1D5;border-radius:8px;padding:12px 13px}
+.icll{font-size:9px;font-weight:600;color:#A38560;text-transform:uppercase;letter-spacing:1.5px;display:block;margin-bottom:4px}
+.iclv{font-size:14px;font-weight:500;color:#03110D}
+
+/* ── FORM ── */
+.flbl{font-size:10px;font-weight:600;color:#A38560;text-transform:uppercase;letter-spacing:1.5px;display:block;margin-bottom:6px}
+.finp{background:#FEF1D5;border:1px solid rgba(3,17,13,.15);color:#03110D;font-family:inherit;font-size:14px;padding:10px 13px;width:100%;outline:none;border-radius:8px;transition:border-color .15s;-webkit-appearance:none}
+.finp:focus{border-color:#679CBC}
+textarea.finp{resize:none;line-height:1.5}
+.frow{display:flex;gap:8px;align-items:flex-start}
+
+/* ── PROP BOX ── */
+.propbox{border:1px solid rgba(103,156,188,.28);background:rgba(103,156,188,.03);border-radius:10px;padding:16px;margin-top:12px;animation:pi .28s ease}
+.propt{font-size:18px;font-weight:600;color:#03110D;margin-bottom:3px;letter-spacing:-.3px}
+.props{font-size:13px;color:#A38560;margin-bottom:12px}
+.proptk{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:13px}
+
+/* ── TOGGLE ── */
+.tglbtn{width:40px;height:22px;border-radius:11px;position:relative;cursor:pointer;border:none;padding:0;transition:background .2s;flex-shrink:0}
+.tgldot{width:16px;height:16px;background:#FEF1D5;border-radius:8px;position:absolute;top:3px;transition:left .2s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+
+/* ── PROMPT BOX ── */
+.pmbox{background:#FEF1D5;border:1px solid rgba(3,17,13,.1);border-radius:8px;padding:12px;font-family:inherit;font-size:11px;color:#16302B;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-height:180px;overflow-y:auto;margin-bottom:10px}
+
+/* ── CHART FILTER ── */
+.cft{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.cfbtn{font-family:inherit;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:4px 9px;background:transparent;border:1px solid rgba(3,17,13,.15);color:#A38560;cursor:pointer;border-radius:4px;transition:all .15s;-webkit-appearance:none}
+.cfbtn.on{background:#03110D;color:#FEF1D5;border-color:#03110D}
+
+/* ── MISC ── */
+.empt{text-align:center;padding:36px 16px;border:1px dashed rgba(3,17,13,.12);border-radius:10px}
+.emtl{font-size:14px;font-weight:600;color:#03110D;display:block;margin-bottom:6px}
+.emth{font-size:13px;color:#679CBC;font-weight:400}
+.difgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.difbox{background:#FEF1D5;border-radius:8px;padding:10px;text-align:center}
+.errmsg{color:#C11720;font-size:12px;font-weight:500;margin-top:8px;display:none;padding:8px 0}
+.divider{height:1px;background:rgba(3,17,13,.07);margin:14px 0}
+.obbanner{background:rgba(193,23,32,.05);border:1px solid rgba(193,23,32,.17);border-radius:8px;padding:11px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.obbanner span{font-size:12px;font-weight:500;color:#C11720}
+.statrow{margin-bottom:14px}
+.stattop{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:13px}
+.statr{height:2px;background:rgba(3,17,13,.08);border-radius:1px;overflow:hidden}
+.statf{height:100%;border-radius:1px;transition:width .6s ease}
+
+/* ── TOAST ── */
+#toast{position:fixed;top:78px;left:50%;transform:translateX(-50%);color:#FEF1D5;padding:9px 20px;z-index:999;pointer-events:none;white-space:nowrap;display:none;border-radius:8px;font-size:12px;font-weight:500;letter-spacing:.3px;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+
+@media(max-width:360px){.hr{gap:12px}.nb span{display:none}}
+@media(min-width:600px){.tp{padding:28px 0 20px}}
 </style>
 </head>
 <body>
@@ -149,15 +255,13 @@ textarea.finp{resize:none;line-height:1.5}
     <div class="ht">
       <div class="aw" onclick="document.getElementById('avf').click()">
         <img id="avi" src="" alt="av" class="awi"/>
-        <div class="awo">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FEF1D5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </div>
+        <div class="awo"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FEF1D5" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
         <div class="awl" id="hlv">01</div>
       </div>
       <input type="file" id="avf" accept="image/*" onchange="upAv(this)">
       <div class="hi">
+        <span class="hg" id="hgr">Buenos días</span>
         <div class="hn" id="hnm">OPERADOR</div>
-        <div class="hk" id="hrk">Nivel 1 &middot; Recluta</div>
       </div>
       <div class="hr">
         <div class="hsi"><span class="hsl">Racha</span><span class="hsv" id="hstr">0D</span></div>
@@ -181,75 +285,110 @@ textarea.finp{resize:none;line-height:1.5}
   <div id="tab-p" class="tp" style="display:none"></div>
   <nav id="nav">
     <button class="nb on" onclick="go('m')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
-      <span>Habitos</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+      <span>Hábitos</span>
     </button>
     <button class="nb" onclick="go('s')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
       <span>Stats</span>
     </button>
     <button class="nb" onclick="go('h')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       <span>Historial</span>
     </button>
     <button class="nb" onclick="go('p')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>Perfil</span>
     </button>
   </nav>
 </div>
 <script>
 'use strict';
+/* ── CONSTANTS ── */
 var DXP={E:50,D:100,C:180,B:300,A:500,S:800};
 var SK=['claridad','motivacion','consistencia','satisfaccion','identidad','sistemas'];
 var SN=['CLARIDAD','MOTIVACION','CONSISTENCIA','SATISFACCION','IDENTIDAD','SISTEMAS'];
-var DN=['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
+var DN=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 var LAWS={
-  1:{name:'Hacerlo Obvio',desc:'Crea una senal visible',col:'#0C324A'},
+  1:{name:'Hacerlo Obvio',desc:'Crea una señal visible',col:'#0C324A'},
   2:{name:'Hacerlo Atractivo',desc:'Aumenta el deseo de hacerlo',col:'#679CBC'},
-  3:{name:'Hacerlo Facil',desc:'Reduce la friccion al minimo',col:'#16302B'},
+  3:{name:'Hacerlo Fácil',desc:'Reduce la fricción al mínimo',col:'#16302B'},
   4:{name:'Hacerlo Satisfactorio',desc:'Recompensa inmediata',col:'#C11720'}
 };
-var BLANK='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><rect width="48" height="48" rx="24" fill="#16302B"/><circle cx="24" cy="18" r="9" fill="#0C324A"/><path d="M5 46c0-10.5 8.5-19 19-19s19 8.5 19 19" fill="#0C324A"/></svg>');
+var STAT_COLS=['#0C324A','#679CBC','#16302B','#C11720','#A38560','#390517'];
+var BLANK='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><rect width="48" height="48" rx="24" fill="#E0E0E0"/><circle cx="24" cy="18" r="9" fill="#A38560"/><path d="M5 46c0-10.5 8.5-19 19-19s19 8.5 19 19" fill="#A38560"/></svg>');
 var DEF={
   player:{name:'OPERADOR',xp:0,hp:100,maxHp:100,streak:0},
   stats:{claridad:0,motivacion:0,consistencia:0,satisfaccion:0,identidad:0,sistemas:0},
-  saga:{name:'Sin habito activo',objective:'Ve a Perfil y crea tu primer habito con las 4 Leyes',startDate:new Date().toISOString(),totalDays:90},
+  saga:{name:'Sin hábito activo',objective:'Ve a Perfil y crea tu primer hábito con las 4 Leyes',startDate:new Date().toISOString(),totalDays:90},
   weeklyMissions:[],dailyTasks:[],history:[],lastDate:'',overloaded:false
 };
-var S,AV='';
+var S, AV='', _histFilter=null;
+var PROMPT_TEXT='Aplica las 4 Leyes de los Habitos Atomicos de James Clear para crear un plan de habito.\n\nMi habito objetivo: [ESCRIBE AQUI TU HABITO EN UNA FRASE]\n\nInstrucciones para la IA:\n- Ley 1 Hacerlo Obvio: genera tareas que creen una senal visible (lugar preparado, recordatorio visual, hora especifica).\n- Ley 2 Hacerlo Atractivo: genera tareas que aumenten el deseo (vincularlo con algo placentero, entorno social, beneficio visible).\n- Ley 3 Hacerlo Facil: genera tareas que reduzcan la friccion (regla de 2 minutos, preparacion previa, eliminar obstaculos).\n- Ley 4 Hacerlo Satisfactorio: genera tareas de recompensa inmediata (registro visual del progreso, celebracion pequena, seguimiento).\n\nResponde UNICAMENTE con este JSON, sin explicaciones ni markdown:\n{\n  "sagaName": "NOMBRE 2-3 PALABRAS EN MAYUSCULAS",\n  "objective": "descripcion del habito en una linea",\n  "weeklyMissions": [\n    {"name":"MISION","description":"descripcion","total":5,"stat":"claridad","law":1},\n    {"name":"MISION","description":"descripcion","total":7,"stat":"consistencia","law":3}\n  ],\n  "dailyTasks": [\n    {"name":"tarea ley 1","difficulty":"D","stat":"claridad","critical":true,"law":1},\n    {"name":"tarea ley 2","difficulty":"C","stat":"motivacion","critical":false,"law":2},\n    {"name":"tarea ley 3","difficulty":"E","stat":"consistencia","critical":true,"law":3},\n    {"name":"tarea ley 4","difficulty":"D","stat":"satisfaccion","critical":false,"law":4}\n  ]\n}\nStats validos: claridad, motivacion, consistencia, satisfaccion, identidad, sistemas.\nDificultades: E D C B A S (de mas facil a mas dificil).';
+
+/* ── STATE ── */
 function loadS(){
   try{var r=localStorage.getItem('opv5');if(r)S=JSON.parse(r);}catch(e){}
   if(!S)S=JSON.parse(JSON.stringify(DEF));
+  // Guard all fields
+  if(!S.player)S.player={};
+  if(!S.player.name)S.player.name=DEF.player.name;
+  if(S.player.xp===undefined)S.player.xp=0;
+  if(S.player.hp===undefined)S.player.hp=100;
+  if(S.player.maxHp===undefined)S.player.maxHp=100;
+  if(S.player.streak===undefined)S.player.streak=0;
+  if(!S.stats)S.stats={};
+  SK.forEach(function(k){if(S.stats[k]===undefined)S.stats[k]=0;});
+  if(!S.saga)S.saga=JSON.parse(JSON.stringify(DEF.saga));
+  if(!S.saga.startDate)S.saga.startDate=new Date().toISOString();
+  if(!S.saga.totalDays)S.saga.totalDays=90;
+  if(!Array.isArray(S.weeklyMissions))S.weeklyMissions=[];
+  if(!Array.isArray(S.dailyTasks))S.dailyTasks=[];
+  if(!Array.isArray(S.history))S.history=[];
   if(!S.lastDate)S.lastDate='';
   if(S.overloaded===undefined)S.overloaded=false;
+  // Migrate old stat keys
   if(S.stats.vitalidad!==undefined)S.stats={claridad:S.stats.vitalidad||0,motivacion:S.stats.fuerza||0,consistencia:S.stats.agilidad||0,satisfaccion:S.stats.resistencia||0,identidad:S.stats.inteligencia||0,sistemas:S.stats.sabiduria||0};
   try{AV=localStorage.getItem('op_av')||'';}catch(e){}
 }
 function saveS(){try{localStorage.setItem('opv5',JSON.stringify(S));}catch(e){}}
 function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+
+/* ── DAILY RESET (uses local date, runs on load only) ── */
 function dailyReset(){
   if(!S.dailyTasks.length)return;
-  var t=today();if(S.lastDate===t)return;
+  var t=today();
+  if(S.lastDate===t)return;
   var done=S.dailyTasks.filter(function(x){return x.done;}).length;
   var tot=S.dailyTasks.length;
   var cm=S.dailyTasks.filter(function(x){return x.critical&&!x.done;}).length;
   var xp=S.dailyTasks.reduce(function(a,x){return a+(x.done?(DXP[x.difficulty]||0):0);},0);
-  if(S.lastDate)S.history.push({date:new Date().toISOString(),xpGained:xp,tasksCompleted:done,totalTasks:tot});
+  // Record previous day using lastDate (correct date, not today)
+  if(S.lastDate){
+    var lp=S.lastDate.split('-');
+    var ld=new Date(+lp[0],+lp[1]-1,+lp[2]);
+    S.history.push({date:ld.toISOString(),xpGained:xp,tasksCompleted:done,totalTasks:tot});
+  }
   if(S.history.length>90)S.history=S.history.slice(-90);
+  // Streak: increase if any done, break if zero
   S.player.streak=done>0?S.player.streak+1:0;
+  // HP logic
   if(cm>0)S.player.hp=Math.max(10,S.player.hp-cm*15);
   else if(done===tot&&tot>0)S.player.hp=Math.min(S.player.maxHp,S.player.hp+10);
   else if(done>0)S.player.hp=Math.min(S.player.maxHp,S.player.hp+3);
   if(S.player.hp<40)S.overloaded=true;
+  // Reset tasks (difficulty reduced in overloaded)
   var ez={S:'A',A:'B',B:'C',C:'D',D:'E',E:'E'};
   S.dailyTasks=S.dailyTasks.map(function(x){
     var r=Object.assign({},x,{done:false});
     if(S.overloaded&&!x.critical)r.difficulty=ez[x.difficulty]||x.difficulty;
     return r;
   });
-  S.lastDate=t;saveS();
+  S.lastDate=t;
+  saveS();
 }
+
+/* ── HELPERS ── */
 function lvl(xp){var l=1,th=1000,tot=0;while(xp>=tot+th){tot+=th;l++;th=Math.floor(th*1.4);}return{level:l,current:xp-tot,needed:th};}
 function hpc(p){return p>60?'#679CBC':p>30?'#A38560':'#C11720';}
 function tgcls(d){var m={E:'tge',D:'tgd',C:'tgc',B:'tgb',A:'tga',S:'tgs'};return'tag '+(m[d]||'tge');}
@@ -273,7 +412,8 @@ function updHUD(){
   var hpp=Math.min((hp/mhp)*100,100),hc=hpc(hpp);
   document.getElementById('hlv').textContent=String(d.level).padStart(2,'0');
   document.getElementById('hnm').textContent=S.player.name;
-  document.getElementById('hrk').textContent='Nivel '+d.level+' \u00b7 '+rnk(d.level);
+  var gr=document.getElementById('hgr');
+  if(gr){var hr=new Date().getHours();gr.textContent=hr<12?'Buenos días':hr<18?'Buenas tardes':'Buenas noches';}
   document.getElementById('hstr').textContent=S.player.streak+'D';
   document.getElementById('hxp').textContent=S.player.xp.toLocaleString();
   document.getElementById('hpt').textContent=hp+'/'+mhp;
@@ -290,185 +430,380 @@ function go(tab){
   if(tab==='m')renderM();else if(tab==='s')renderSt();else if(tab==='h')renderH();else renderP();
 }
 
-/* MISIONES */
+/* ── DATA AGGREGATION LAYER ── */
+function agg(){
+  var mx=0,tot=0;
+  SK.forEach(function(k){if(S.stats[k]>mx)mx=S.stats[k];tot+=S.stats[k];});
+  var missionProgress=S.weeklyMissions.map(function(m){
+    var lc=m.law&&LAWS[m.law]?LAWS[m.law]:{col:'#A38560'};
+    return{id:m.id,name:m.name,pct:Math.min((m.progress/m.total)*100,100),col:lc.col,progress:m.progress,total:m.total,law:m.law,active:!!m.active};
+  });
+  return{statMax:Math.max(mx,1),statSum:tot,missionProgress:missionProgress,taskHistory:S.history.slice(-14)};
+}
+
+/* ── DETERMINISTIC PRNG (for radial chart) ── */
+function prng(seed){var x=Math.sin(seed+1)*43758.5453;return x-Math.floor(x);}
+
+/* ── MISSION CARD COMPONENT ──
+   Reusable — called from renderM() and renderH()
+   mission: weeklyMission object
+   tasks: array of dailyTasks to filter by law
+   showTasks: bool
+────────────────────────────── */
+function MissionCard(mission, tasks, showTasks){
+  var lc=mission.law&&LAWS[mission.law]?LAWS[mission.law]:{col:'#A38560',name:'Misión'};
+  var pct=Math.min((mission.progress/mission.total)*100,100);
+  var isDone=mission.progress>=mission.total;
+  var mTasks=showTasks?(tasks||[]).filter(function(t){return t.law===mission.law;}):[];
+  var h='<div class="mcrd">';
+  // Top row
+  h+='<div class="mcrd-top">';
+  h+='<div class="mcrd-info">';
+  h+='<div class="mcrd-meta">';
+  h+='<span class="mcrd-law-tag" style="background:'+lc.col+'">'+(mission.law?'Ley '+mission.law:'Misión')+'</span>';
+  if(isDone)h+='<span class="mcrd-done-badge">✓ Completa</span>';
+  if(mission.active&&!isDone)h+='<span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#679CBC">● En curso</span>';
+  h+='</div>';
+  h+='<div class="mcrd-name">'+esc(mission.name)+'</div>';
+  h+='<div class="mcrd-desc">'+esc(mission.description)+'</div>';
+  h+='<div class="mcrd-bar"><div class="mcrd-fill" style="width:'+pct+'%;background:'+lc.col+'"></div></div>';
+  h+='</div>';
+  // Right column
+  h+='<div class="mcrd-right">';
+  h+='<span class="mcrd-count" style="color:'+lc.col+'">'+mission.progress+'/'+mission.total+'</span>';
+  h+='<button class="mcrd-incr"'+(isDone?' disabled':'')+' onclick="incrM(\''+mission.id+'\')" title="Registrar avance">+</button>';
+  h+='</div>';
+  h+='</div>'; // end mcrd-top
+  // Tasks inside card
+  if(showTasks&&mTasks.length){
+    h+='<div class="mcrd-tasks">';
+    mTasks.forEach(function(t){h+=mkTaskInCard(t);});
+    h+='</div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+/* ── TASK RENDERERS ── */
+function mkTaskInCard(t){
+  var lc=t.law&&LAWS[t.law]?LAWS[t.law].col:'transparent';
+  var h='<div class="tkc'+(t.done?' dn':'')+'" style="border-left:2px solid '+lc+';padding-left:8px">';
+  if(t.critical&&!t.done)h+='<div class="crdot"></div>';
+  h+='<div class="tkb"><div class="tkn">'+esc(t.name)+'</div>';
+  h+='<div class="tkt"><span class="'+tgcls(t.difficulty)+'">'+esc(t.difficulty)+'</span>';
+  h+='<span class="tgst">'+esc(t.stat)+'</span>';
+  h+='<span style="font-size:10px;color:rgba(163,133,96,.65);font-weight:500">+'+(DXP[t.difficulty]||50)+' XP</span></div></div>';
+  h+='<button class="ebtn"'+(t.done?' disabled':'')+' onclick="doTask(\''+t.id+'\')">'+(t.done?'✓':'Hacer')+'</button></div>';
+  return h;
+}
+function mkTaskFlat(t){
+  var lc=t.law&&LAWS[t.law]?LAWS[t.law].col:'transparent';
+  var h='<div class="tkf'+(t.done?' dn':'')+'">'; 
+  if(t.critical&&!t.done)h+='<div class="crdot"></div>';
+  h+='<div style="width:3px;height:36px;background:'+lc+';border-radius:0;flex-shrink:0;margin-right:2px"></div>';
+  h+='<div class="tkb"><div class="tkn">'+esc(t.name)+'</div>';
+  h+='<div class="tkt"><span class="'+tgcls(t.difficulty)+'">'+esc(t.difficulty)+'</span>';
+  h+='<span class="tgst">'+esc(t.stat)+'</span>';
+  h+='<span style="font-size:10px;color:rgba(163,133,96,.65);font-weight:500">+'+(DXP[t.difficulty]||50)+' XP</span></div></div>';
+  h+='<button class="ebtn"'+(t.done?' disabled':'')+' onclick="doTask(\''+t.id+'\')">'+(t.done?'✓':'Hacer')+'</button></div>';
+  return h;
+}
+
+/* ── ACTIVE SAGA LOOKUP ──
+   1. Mission with active:true  →  use it
+   2. No active flag  →  most recently created (last in array)
+   3. Empty  →  null
+──────────────────────────── */
+function getActiveMission(){
+  if(!S.weeklyMissions.length)return null;
+  for(var i=0;i<S.weeklyMissions.length;i++){if(S.weeklyMissions[i].active)return S.weeklyMissions[i];}
+  return S.weeklyMissions[S.weeklyMissions.length-1];
+}
+
+/* ── RENDER HÁBITOS ── */
 function renderM(){
   var el=document.getElementById('tab-m');
   var elapsed=Math.max(0,Math.floor((Date.now()-new Date(S.saga.startDate).getTime())/864e5));
   var sp=Math.min((elapsed/S.saga.totalDays)*100,100);
   var tasks=S.overloaded?S.dailyTasks.filter(function(t){return t.critical||t.difficulty==='E'||t.difficulty==='D';}):S.dailyTasks;
-  var done=tasks.filter(function(t){return t.done;}).length,tot=tasks.length;
+  var done=tasks.filter(function(t){return t.done;}).length;
+  var tot=tasks.length;
+  var pct=tot>0?Math.round((done/tot)*100):0;
   var h='';
-  // Saga card
+
+  /* Hero number */
+  h+='<div class="hero">';
+  h+='<span class="hero-lbl">Progreso del día</span>';
+  h+='<span class="hero-num"><span class="n">'+pct+'</span><span class="u">%</span></span>';
+  h+='<span class="hero-sub">'+done+' / '+tot+' tareas</span>';
+  h+='</div>';
+
+  /* Active Saga card (dark) */
+  var activeMission=getActiveMission();
   h+='<div class="sgcard">';
-  h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">';
-  h+='<div style="flex:1;min-width:0"><div class="sgn">'+esc(S.saga.name)+'</div>';
+  h+='<span class="sgcard-lbl">Saga activa</span>';
+  h+='<div style="display:flex;justify-content:space-between;align-items:flex-end">';
+  h+='<div style="flex:1;min-width:0;margin-right:20px">';
+  h+='<div class="sgn">'+esc(S.saga.name)+'</div>';
   h+='<div class="sgo">'+esc(S.saga.objective)+'</div></div>';
-  h+='<div style="text-align:right;flex-shrink:0;margin-left:14px"><div class="sgd">'+elapsed+'</div>';
-  h+='<div class="sgdl">/ '+S.saga.totalDays+' dias</div></div></div>';
-  h+='<div class="btr" style="height:6px;margin-bottom:7px"><div class="bfl" style="width:'+sp+'%;background:#679CBC"></div></div>';
-  h+='<div style="display:flex;justify-content:space-between">';
-  h+='<span style="font-size:10px;font-weight:600;color:rgba(254,241,213,.45);text-transform:uppercase;letter-spacing:1px">'+elapsed+' dias</span>';
-  h+='<span style="font-size:10px;font-weight:600;color:rgba(254,241,213,.45);text-transform:uppercase;letter-spacing:1px">'+(S.saga.totalDays-elapsed)+' restantes</span>';
-  h+='</div></div>';
+  h+='<div style="text-align:right;flex-shrink:0"><div class="sgd">'+elapsed+'</div>';
+  h+='<div class="sgdl">/ '+S.saga.totalDays+' días</div></div></div>';
+  /* Active mission preview inside saga card */
+  if(activeMission){
+    var aLc=activeMission.law&&LAWS[activeMission.law]?LAWS[activeMission.law]:{col:'#679CBC'};
+    var aP=Math.min((activeMission.progress/activeMission.total)*100,100);
+    h+='<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)">';
+    h+='<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:rgba(254,241,213,.32);margin-bottom:6px">Misión en curso</div>';
+    h+='<div style="font-size:14px;font-weight:600;color:#FEF1D5;margin-bottom:8px;line-height:1.3">'+esc(activeMission.name)+'</div>';
+    h+='<div style="height:1px;background:rgba(255,255,255,.1);overflow:hidden">';
+    h+='<div style="height:100%;width:'+aP+'%;background:'+aLc.col+';transition:width .5s ease"></div></div>';
+    h+='<div style="display:flex;justify-content:space-between;margin-top:6px">';
+    h+='<span style="font-size:10px;color:rgba(254,241,213,.28);letter-spacing:.5px">'+activeMission.progress+' completados</span>';
+    h+='<span style="font-size:10px;color:rgba(254,241,213,.28)">'+activeMission.total+' total</span></div></div>';
+  }else{
+    h+='<div class="sgbar"><div class="sgbar-fill" style="width:'+sp+'%"></div></div>';
+    h+='<div class="sgmeta"><span>'+elapsed+' días</span><span>'+(S.saga.totalDays-elapsed)+' restantes</span></div>';
+  }
+  h+='</div>'; /* end sgcard */
+
+  /* Overloaded banner */
   if(S.overloaded){
-    h+='<div class="obbanner"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C11720" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
-    h+='<span>Modo Sobrecargado activo &mdash; carga reducida</span></div>';
+    h+='<div style="padding:14px 20px 0">';
+    h+='<div class="obbanner">';
+    h+='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C11720" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+    h+='<span>Modo Sobrecargado activo — carga reducida</span></div></div>';
   }
+
+  /* Mission Cards (full-width, no margin) */
   if(S.weeklyMissions.length){
-    h+='<span class="seclbl">Misiones semanales</span>';
-    S.weeklyMissions.forEach(function(m){
-      var lc=m.law&&LAWS[m.law]?LAWS[m.law]:{col:'#A38560'};
-      var p=Math.min((m.progress/m.total)*100,100);
-      h+='<div class="mscard"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
-      h+='<span class="msn">'+esc(m.name)+'</span>';
-      h+='<span style="font-size:12px;font-weight:700;color:'+lc.col+'">'+m.progress+'/'+m.total+'</span></div>';
-      h+='<div class="msd">'+esc(m.description)+'</div>';
-      h+='<div class="statr" style="height:5px"><div class="statf" style="width:'+p+'%;background:'+lc.col+'"></div></div></div>';
-    });
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:20px 20px 8px">';
+    h+='<span class="seclbl" style="margin:0">Misiones</span>';
+    h+='<span style="font-size:11px;color:#A38560;font-weight:500">'+S.weeklyMissions.length+' activas</span>';
+    h+='</div>';
+    h+='<div class="mcrd-list">';
+    S.weeklyMissions.forEach(function(m){h+=MissionCard(m,tasks,true);});
+    h+='</div>';
   }
-  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
-  h+='<span class="seclbl" style="margin:0">Tareas del dia</span>';
-  h+='<span style="font-size:clamp(11px,1.7vw,13px);font-weight:700;color:'+(done>0&&done===tot?'#16302B':'#A38560')+'">'+done+'/'+tot+'</span></div>';
-  if(!tasks.length){
-    h+='<div class="empt"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0C324A" stroke-width="1.5" style="margin-bottom:10px;opacity:.3"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>';
-    h+='<span class="emtl">Sin tareas activas</span><div class="emth">&rarr; Ve a Perfil y crea tu primer habito</div></div>';
-  } else {
-    var hasLaw=tasks.some(function(t){return t.law;});
-    if(hasLaw){
-      [1,2,3,4].forEach(function(n){
-        var lt=tasks.filter(function(t){return t.law===n;});if(!lt.length)return;
-        var lw=LAWS[n];
-        h+='<div style="margin-bottom:16px"><div class="lwhd lg'+n+'">';
-        h+='<div class="lwnum lk'+n+'">'+n+'</div>';
-        h+='<div class="lwt"><div class="lwnm lc'+n+'">'+lw.name+'</div>';
-        h+='<div class="lwds lc'+n+'">'+lw.desc+'</div></div></div>';
-        lt.forEach(function(t){h+=mkTask(t);});
-        h+='</div>';
-      });
-      tasks.filter(function(t){return !t.law;}).forEach(function(t){h+=mkTask(t);});
-    } else {
-      tasks.forEach(function(t){h+=mkTask(t);});
-    }
+
+  /* Unmapped tasks — tasks whose law doesn't match any mission */
+  var unmapped=tasks.filter(function(t){
+    if(!t.law)return true;
+    return!S.weeklyMissions.some(function(m){return m.law===t.law;});
+  });
+  if(unmapped.length){
+    h+='<span class="mcrd-section-lbl" style="margin-top:6px">Tareas del día — '+done+'/'+tot+'</span>';
+    h+='<div class="mcrd-list">';
+    unmapped.forEach(function(t){h+=mkTaskFlat(t);});
+    h+='</div>';
+  }
+
+  /* Empty state */
+  if(!S.weeklyMissions.length&&!tasks.length){
+    h+='<div style="padding:24px 20px 0">';
+    h+='<div class="empt">';
+    h+='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A38560" stroke-width="1.5" style="margin-bottom:10px;opacity:.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>';
+    h+='<span class="emtl">Sin tareas activas</span>';
+    h+='<div class="emth">→ Ve a Perfil y crea tu primer hábito</div></div></div>';
   }
   el.innerHTML=h;
 }
-function mkTask(t){
-  var lc=t.law&&LAWS[t.law]?LAWS[t.law].col:'transparent';
-  var h='<div class="tkc'+(t.done?' dn':'')+'" style="border-left-color:'+lc+'">';
-  if(t.critical&&!t.done)h+='<div class="crdot"></div>';
-  h+='<div class="tkb"><div class="tkn">'+esc(t.name)+'</div>';
-  h+='<div class="tkt"><span class="'+tgcls(t.difficulty)+'">'+esc(t.difficulty)+'</span>';
-  h+='<span class="tgst">'+esc(t.stat)+'</span>';
-  h+='<span style="font-size:clamp(9px,1.4vw,11px);color:#A38560;font-weight:500">+'+(DXP[t.difficulty]||50)+' XP</span></div></div>';
-  h+='<button class="ebtn"'+(t.done?' disabled':'')+' onclick="doTask(\''+t.id+'\')">'+(t.done?'\u2713 Hecho':'Hacer')+'</button></div>';
-  return h;
-}
+
+/* ── TASK ACTIONS ── */
 function doTask(id){
-  var i=-1;for(var j=0;j<S.dailyTasks.length;j++){if(S.dailyTasks[j].id===id){i=j;break;}}
+  var i=-1;
+  for(var j=0;j<S.dailyTasks.length;j++){if(S.dailyTasks[j].id===id){i=j;break;}}
   if(i<0||S.dailyTasks[i].done)return;
   var t=S.dailyTasks[i],xpg=DXP[t.difficulty]||50,oL=lvl(S.player.xp).level;
-  S.player.xp+=xpg;S.stats[t.stat]=(S.stats[t.stat]||0)+1;S.dailyTasks[i].done=true;
-  var hg=t.critical?5:2;S.player.hp=Math.min(S.player.maxHp,S.player.hp+hg);
-  if(S.player.hp>=40&&S.overloaded){S.overloaded=false;toast('HP recuperado - modo normal restaurado','#16302B',3000);}
+  S.player.xp+=xpg;
+  S.stats[t.stat]=(S.stats[t.stat]||0)+1;
+  S.dailyTasks[i].done=true;
+  var hg=t.critical?5:2;
+  S.player.hp=Math.min(S.player.maxHp,S.player.hp+hg);
+  if(S.player.hp>=40&&S.overloaded){S.overloaded=false;toast('HP recuperado — modo normal restaurado','#16302B',3000);}
   var nL=lvl(S.player.xp).level;
-  if(nL>oL)setTimeout(function(){toast('Nivel '+nL+' alcanzado!','#0C324A');},60);
-  else toast('+'+xpg+' XP \u00b7 '+t.stat+' +1','#679CBC');
+  if(nL>oL)setTimeout(function(){toast('¡Nivel '+nL+' alcanzado!','#0C324A');},60);
+  else toast('+'+xpg+' XP · '+t.stat+' +1','#679CBC');
   if(!S.lastDate)S.lastDate=today();
   saveS();updHUD();renderM();
 }
 
-/* STATS */
+function incrM(id){
+  var m=null;
+  for(var i=0;i<S.weeklyMissions.length;i++){if(S.weeklyMissions[i].id===id){m=S.weeklyMissions[i];break;}}
+  if(!m||m.progress>=m.total)return;
+  m.progress++;
+  // Mark as active mission (reactive)
+  S.weeklyMissions.forEach(function(x){x.active=false;});
+  m.active=true;
+  saveS();
+  var cur=null;
+  document.querySelectorAll('.nb').forEach(function(b,i){if(b.classList.contains('on'))cur=TABS[i];});
+  if(cur==='m')renderM();else if(cur==='h')renderH();
+  toast('Misión: '+m.progress+'/'+m.total,'#679CBC');
+}
+
+/* ── RENDER STATS ── */
 function renderSt(){
   var el=document.getElementById('tab-s');
-  var tot=0,mx=0;SK.forEach(function(k){tot+=S.stats[k];if(S.stats[k]>mx)mx=S.stats[k];});
-  var cx=150,cy=145,r=95,n=6;
-  var rings='',axes='',poly='',lbs='';
+  var data=agg();
+  var tot=data.statSum, mx=data.statMax;
+
+  /* Radial burst — deterministic from stats */
+  var cx=150,cy=150,R=106,minR=26,nSec=SK.length,lps=14;
+  var secSpan=2*Math.PI/nSec;
+  var svgLines='',svgLabels='';
   var ab=['CLA','MOT','CON','SAT','IDE','SIS'];
-  var cols=['#0C324A','#679CBC','#16302B','#C11720','#A38560','#390517'];
-  for(var ri=1;ri<=4;ri++){
-    var pts='';
-    for(var i=0;i<n;i++){var a=i*(2*Math.PI/n)-Math.PI/2,rr=r*ri/4;pts+=(cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1)+' ';}
-    rings+='<polygon points="'+pts.trim()+'" fill="none" stroke="rgba(12,50,74,.12)" stroke-width="1"/>';
+  for(var si=0;si<nSec;si++){
+    var val=S.stats[SK[si]];
+    var norm=Math.max(0.04,val/mx);
+    var baseAng=si*secSpan-Math.PI/2;
+    for(var li=0;li<lps;li++){
+      var frac=(li+0.5)/lps;
+      var ang=baseAng+(frac-0.5)*secSpan*0.86;
+      var t1=prng(si*200+li*7),t2=prng(si*200+li*7+13);
+      var maxLen=(R-minR)*norm;
+      var len=maxLen*(0.45+0.55*t1);
+      var op=(0.22+norm*0.65*t2).toFixed(2);
+      var x1=(cx+minR*Math.cos(ang)).toFixed(1),y1=(cy+minR*Math.sin(ang)).toFixed(1);
+      var x2=(cx+(minR+len)*Math.cos(ang)).toFixed(1),y2=(cy+(minR+len)*Math.sin(ang)).toFixed(1);
+      svgLines+='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#679CBC" stroke-width="1" stroke-opacity="'+op+'"/>';
+    }
+    var lx=(cx+(R+22)*Math.cos(baseAng)).toFixed(1),ly=(cy+(R+22)*Math.sin(baseAng)).toFixed(1);
+    svgLabels+='<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle" fill="#A38560" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" font-weight="600" letter-spacing="1">'+ab[si]+'</text>';
   }
-  var pp='';
-  for(var i=0;i<n;i++){
-    var a=i*(2*Math.PI/n)-Math.PI/2;
-    axes+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+r*Math.cos(a)).toFixed(1)+'" y2="'+(cy+r*Math.sin(a)).toFixed(1)+'" stroke="rgba(12,50,74,.1)" stroke-width="1"/>';
-    var vr=r*(S.stats[SK[i]]/Math.max(mx,20));
-    pp+=(cx+vr*Math.cos(a)).toFixed(1)+','+(cy+vr*Math.sin(a)).toFixed(1)+' ';
-    var lx=(cx+(r+30)*Math.cos(a)).toFixed(1),ly=(cy+(r+30)*Math.sin(a)).toFixed(1);
-    lbs+='<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle" fill="#0C324A" font-family="DM Sans,sans-serif" font-size="11" font-weight="700">'+ab[i]+'</text>';
-  }
-  poly='<polygon points="'+pp.trim()+'" fill="rgba(103,156,188,.15)" stroke="#679CBC" stroke-width="2"/>';
-  var bars='';
+  var bgRing='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="2 5"/>';
+  var innerRing='<circle cx="'+cx+'" cy="'+cy+'" r="'+minR+'" fill="none" stroke="rgba(3,17,13,.06)" stroke-width="1"/>';
+  var centerCircle='<circle cx="'+cx+'" cy="'+cy+'" r="22" fill="#FEF1D5"/>';
+
+  /* Stat big cells */
+  var cells='';
   SK.forEach(function(k,i){
-    var v=S.stats[k],p=Math.min((v/Math.max(mx,20))*100,100),c=cols[i];
-    bars+='<div class="statrow"><div class="stattop"><span>'+SN[i]+'</span><span style="font-weight:700;color:'+c+'">'+v+'</span></div>';
-    bars+='<div class="statr"><div class="statf" style="width:'+p+'%;background:'+c+'"></div></div></div>';
+    cells+='<div class="stat-big-cell"><span class="stat-big-num" style="color:'+STAT_COLS[i]+'">'+S.stats[k]+'</span><span class="stat-big-lbl">'+SN[i]+'</span></div>';
   });
-  var dg='';
-  Object.keys(DXP).forEach(function(d){
-    dg+='<div class="difbox"><span class="'+tgcls(d)+'" style="display:block;margin-bottom:4px">'+d+'</span>';
-    dg+='<span style="font-size:clamp(12px,1.9vw,14px);font-weight:700;color:#0C324A">+'+DXP[d]+'</span></div>';
-  });
+
+  /* Chart 1: Mission Progress Bar Chart (SVG horizontal bars) */
+  var mChart='';
+  if(data.missionProgress.length){
+    mChart='<div class="cdw"><div class="cd">';
+    mChart+='<span class="seclbl">Progreso de misiones</span>';
+    data.missionProgress.forEach(function(m,idx){
+      var lawLbl=m.law?'Ley '+m.law:'Misión';
+      mChart+='<div style="margin-bottom:'+(idx<data.missionProgress.length-1?14:0)+'px">';
+      mChart+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
+      mChart+='<div style="display:flex;align-items:center;gap:7px;flex:1;min-width:0">';
+      mChart+='<span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#FEF1D5;background:'+m.col+';padding:1px 6px;border-radius:0;flex-shrink:0">'+lawLbl+'</span>';
+      mChart+='<span style="font-size:13px;font-weight:600;color:#03110D;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(m.name)+'</span>';
+      mChart+='</div>';
+      mChart+='<span style="font-size:12px;font-weight:700;color:'+m.col+';margin-left:10px;flex-shrink:0">'+m.progress+'/'+m.total+'</span>';
+      mChart+='</div>';
+      /* SVG bar */
+      mChart+='<svg width="100%" height="8" style="display:block"><rect x="0" y="2" width="100%" height="4" rx="0" fill="rgba(3,17,13,.08)"/><rect x="0" y="2" width="'+m.pct.toFixed(1)+'%" height="4" rx="0" fill="'+m.col+'"/></svg>';
+      mChart+='</div>';
+    });
+    mChart+='</div></div>';
+  }
+
+  /* Chart 2: Task Completion History (SVG bar chart with filter) */
+  var hChart='';
+  if(data.taskHistory.length){
+    var rec=_histFilter?data.taskHistory:data.taskHistory; /* filter by mission could extend here */
+    hChart='<div class="cdw"><div class="cd">';
+    hChart+='<span class="seclbl">Historial de completions</span>';
+    /* Filter buttons */
+    hChart+='<div class="cft">';
+    hChart+='<button class="cfbtn'+(_histFilter===null?' on':'')+'" onclick="setHF(null)">Todo</button>';
+    S.weeklyMissions.forEach(function(m){
+      hChart+='<button class="cfbtn'+(_histFilter===m.id?' on':'')+'" onclick="setHF(\''+m.id+'\')">'+esc(m.name.length>10?m.name.slice(0,10)+'…':m.name)+'</button>';
+    });
+    hChart+='</div>';
+    /* SVG timeline */
+    var barH=60,barPad=4,visRec=rec.slice(-14);
+    var bW=Math.max(18,Math.floor((280-(visRec.length-1)*barPad)/Math.max(visRec.length,1)));
+    var svgTW=Math.max(280,visRec.length*(bW+barPad));
+    hChart+='<div style="overflow-x:auto"><svg width="'+svgTW+'" height="'+(barH+20)+'" style="display:block;min-width:100%">';
+    visRec.forEach(function(h,i){
+      var p=h.totalTasks>0?h.tasksCompleted/h.totalTasks:0;
+      var bh=Math.max(4,Math.round(p*barH));
+      var c=p>=1?'#16302B':p>=0.6?'#679CBC':'#C11720';
+      var x=i*(bW+barPad);
+      var y=barH-bh;
+      hChart+='<rect x="'+x+'" y="'+y+'" width="'+bW+'" height="'+bh+'" rx="0" fill="'+c+'"/>';
+      var d=new Date(h.date);
+      hChart+='<text x="'+(x+bW/2).toFixed(1)+'" y="'+(barH+13)+'" text-anchor="middle" fill="#A38560" font-size="9" font-family="ui-sans-serif,system-ui,sans-serif">'+DN[d.getDay()]+'</text>';
+    });
+    hChart+='</svg></div>';
+    hChart+='<div style="display:flex;gap:16px;margin-top:12px">';
+    hChart+='<div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:3px;background:#16302B"></div><span style="font-size:10px;color:#A38560">100%</span></div>';
+    hChart+='<div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:3px;background:#679CBC"></div><span style="font-size:10px;color:#A38560">≥60%</span></div>';
+    hChart+='<div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:3px;background:#C11720"></div><span style="font-size:10px;color:#A38560">&lt;60%</span></div>';
+    hChart+='</div>';
+    hChart+='</div></div>';
+  }
+
+  /* Laws */
   var lh='';
   [1,2,3,4].forEach(function(n){
     var lw=LAWS[n];
-    lh+='<div class="lwhd lg'+n+'" style="margin-bottom:8px;border-radius:3px">';
+    lh+='<div class="lwhd lg'+n+'" style="margin-bottom:6px;border-radius:8px">';
     lh+='<div class="lwnum lk'+n+'">'+n+'</div>';
     lh+='<div class="lwt"><div class="lwnm lc'+n+'">'+lw.name+'</div>';
     lh+='<div class="lwds lc'+n+'">'+lw.desc+'</div></div></div>';
   });
-  el.innerHTML=
-    '<div class="cd"><span class="seclbl">Perfil de atributos</span>'+
-    '<svg viewBox="0 0 300 295" width="100%" style="display:block;max-width:300px;margin:0 auto">'+rings+axes+poly+lbs+'</svg>'+
-    '<div style="display:flex;justify-content:center;gap:32px;margin-top:12px">'+
-    '<div style="text-align:center"><div style="font-size:clamp(20px,3.5vw,26px);font-weight:800;color:#0C324A">'+tot+'</div><span style="font-size:10px;font-weight:700;color:#A38560;text-transform:uppercase;letter-spacing:1px">Stats totales</span></div>'+
-    '<div style="text-align:center"><div style="font-size:clamp(20px,3.5vw,26px);font-weight:800;color:#679CBC">'+mx+'</div><span style="font-size:10px;font-weight:700;color:#A38560;text-transform:uppercase;letter-spacing:1px">Stat maximo</span></div>'+
-    '</div></div>'+
-    '<div class="cd"><span class="seclbl">Atributos</span>'+bars+'</div>'+
-    '<div class="cd"><span class="seclbl">Las 4 Leyes &mdash; Habitos Atomicos</span>'+lh+'</div>'+
-    '<div class="cd"><span class="seclbl">Escala de dificultad</span><div class="difgrid">'+dg+'</div></div>';
-}
+  /* Difficulty */
+  var dg='';
+  Object.keys(DXP).forEach(function(d){
+    dg+='<div class="difbox"><span class="'+tgcls(d)+'" style="display:block;margin-bottom:5px">'+d+'</span>';
+    dg+='<span style="font-size:14px;font-weight:600;color:#03110D">+'+DXP[d]+'</span></div>';
+  });
 
-/* HISTORIAL */
+  el.innerHTML=
+    '<div class="hero" style="margin-top:0">'+
+    '<span class="hero-lbl">Stats totales</span>'+
+    '<span class="hero-num"><span class="n" style="color:#03110D">'+tot+'</span><span class="u" style="color:#A38560"> pts</span></span>'+
+    '</div>'+
+    '<div class="cdw"><div class="cd"><span class="seclbl">Perfil radial</span>'+
+    '<svg viewBox="0 0 300 300" width="100%" style="display:block;max-width:280px;margin:0 auto 4px">'+bgRing+innerRing+svgLines+centerCircle+svgLabels+'</svg></div></div>'+
+    '<div class="cdw"><div class="stat-big-grid">'+cells+'</div></div>'+
+    mChart+
+    hChart+
+    '<div class="cdw"><div class="cd"><span class="seclbl">Las 4 Leyes</span>'+lh+'</div></div>'+
+    '<div class="cdw"><div class="cd"><span class="seclbl">Escala de dificultad</span><div class="difgrid">'+dg+'</div></div></div>';
+}
+function setHF(id){_histFilter=id;renderSt();}
+
+/* ── RENDER HISTORIAL ── */
 function renderH(){
   var el=document.getElementById('tab-h');
-  // Mission tracker section (always shown if missions exist)
+  /* Mission progress tracker using MissionCard */
   var mtrack='';
   if(S.weeklyMissions.length){
-    mtrack='<div class="cd"><span class="seclbl">Progreso de misiones</span>';
-    S.weeklyMissions.forEach(function(m){
-      var lc=m.law&&LAWS[m.law]?LAWS[m.law]:{col:'#A38560'};
-      var p=Math.min((m.progress/m.total)*100,100);
-      var lawTag=m.law?'<span style="background:'+lc.col+';color:#FEF1D5;font-size:10px;font-weight:800;padding:1px 7px;border-radius:10px;margin-right:6px">L'+m.law+'</span>':'';
-      mtrack+='<div style="margin-bottom:14px">';
-      mtrack+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">';
-      mtrack+='<div style="flex:1;min-width:0"><div style="font-size:clamp(12px,1.9vw,14px);font-weight:700;color:#0C324A;margin-bottom:2px">'+lawTag+esc(m.name)+'</div>';
-      mtrack+='<div style="font-size:clamp(10px,1.5vw,12px);color:#A38560;line-height:1.4">'+esc(m.description)+'</div></div>';
-      mtrack+='<span style="font-size:clamp(11px,1.7vw,13px);font-weight:800;color:'+lc.col+';margin-left:12px;flex-shrink:0">'+m.progress+'/'+m.total+'</span></div>';
-      mtrack+='<div class="statr"><div class="statf" style="width:'+p+'%;background:'+lc.col+'"></div></div>';
-      mtrack+='</div>';
-    });
-    mtrack+='</div>';
+    mtrack='<div style="display:flex;justify-content:space-between;align-items:center;padding:0 20px 8px">';
+    mtrack+='<span class="seclbl" style="margin:0">Progreso de misiones</span></div>';
+    mtrack+='<div class="mcrd-list">';
+    S.weeklyMissions.forEach(function(m){mtrack+=MissionCard(m,[],false);});
+    mtrack+='</div><div style="height:16px"></div>';
   }
   if(!S.history.length){
-    el.innerHTML=mtrack+'<div class="cd"><div class="empt"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0C324A" stroke-width="1.5" style="margin-bottom:10px;opacity:.3"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="emtl">Sin historial aun</span><div class="emth">Completa tareas para registrar tu progreso</div></div></div>';
+    el.innerHTML=mtrack+
+      '<div class="cdw"><div class="cd"><div class="empt" style="margin:0">'+
+      '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A38560" stroke-width="1.5" style="margin-bottom:10px;opacity:.4"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'+
+      '<span class="emtl">Sin historial aún</span><div class="emth">Completa tareas para registrar tu progreso</div></div></div></div>';
     return;
   }
   var rec=S.history.slice(-7),wXP=0,avg=0,pf=0;
   rec.forEach(function(h){wXP+=h.xpGained;avg+=(h.tasksCompleted/h.totalTasks)*100;if(h.tasksCompleted===h.totalTasks)pf++;});
-  avg=Math.round(avg/rec.length);
+  avg=rec.length?Math.round(avg/rec.length):0;
   var brs='';
   rec.forEach(function(h){
-    var p=h.tasksCompleted/h.totalTasks,bh=Math.max(6,p*78);
+    var p=h.totalTasks>0?h.tasksCompleted/h.totalTasks:0,bh=Math.max(6,p*60);
     var c=p>=1?'#16302B':p>=.6?'#679CBC':'#C11720';
     var d=new Date(h.date);
     brs+='<div class="hbw"><div class="hbar" style="height:'+bh+'px;background:'+c+'"></div><span class="hday">'+DN[d.getDay()]+'</span></div>';
   });
   var log='';
   [].concat(S.history).reverse().forEach(function(h){
-    var p=Math.round((h.tasksCompleted/h.totalTasks)*100),c=p>=100?'#16302B':p>=60?'#679CBC':'#C11720';
+    var p=h.totalTasks>0?Math.round((h.tasksCompleted/h.totalTasks)*100):0;
+    var c=p>=100?'#16302B':p>=60?'#679CBC':'#C11720';
     var d=new Date(h.date),ds=d.toLocaleDateString('es-MX',{weekday:'short',day:'numeric',month:'short'});
     log+='<div class="logrow"><div style="display:flex;align-items:center"><div class="logdot" style="background:'+c+'"></div>';
     log+='<div><div class="logdt">'+ds+'</div><div class="logsb">'+h.tasksCompleted+'/'+h.totalTasks+' tareas</div></div></div>';
@@ -476,26 +811,30 @@ function renderH(){
   });
   el.innerHTML=
     mtrack+
-    '<div class="sumgrid">'+
+    '<div class="cdw"><div class="sumgrid">'+
     '<div class="sumcell"><div class="sumv" style="color:#679CBC">'+wXP.toLocaleString()+'</div><span class="suml">XP semana</span></div>'+
     '<div class="sumcell"><div class="sumv" style="color:#A38560">'+avg+'%</div><span class="suml">Promedio</span></div>'+
     '<div class="sumcell"><div class="sumv" style="color:#16302B">'+pf+'</div><span class="suml">Perfectos</span></div>'+
-    '</div>'+
-    '<div class="cd"><span class="seclbl">Actividad reciente</span><div class="hbars">'+brs+'</div></div>'+
-    '<div class="cd"><span class="seclbl">Registro</span>'+log+'</div>';
+    '</div></div>'+
+    '<div class="cdw"><div class="cd"><span class="seclbl">Actividad reciente</span><div class="hbars">'+brs+'</div></div></div>'+
+    '<div class="cdw"><div class="cd"><span class="seclbl">Registro</span>'+log+'</div></div>';
 }
 
-/* PERFIL */
+/* ── RENDER PERFIL ── */
 function renderP(){
   var el=document.getElementById('tab-p');
   var d=lvl(S.player.xp);
   var sd=Math.max(0,Math.floor((Date.now()-new Date(S.saga.startDate).getTime())/864e5));
   var ov=S.overloaded;
-  var PROMPT='Aplica las 4 Leyes de los Habitos Atomicos de James Clear para crear un plan de habito.\n\nMi habito objetivo: [ESCRIBE AQUI TU HABITO EN UNA FRASE]\n\nInstrucciones para la IA:\n- Ley 1 Hacerlo Obvio: genera tareas que creen una senal visible (lugar preparado, recordatorio visual, hora especifica).\n- Ley 2 Hacerlo Atractivo: genera tareas que aumenten el deseo (vincularlo con algo placentero, entorno social, beneficio visible).\n- Ley 3 Hacerlo Facil: genera tareas que reduzcan la friccion (regla de 2 minutos, preparacion previa, eliminar obstaculos).\n- Ley 4 Hacerlo Satisfactorio: genera tareas de recompensa inmediata (registro visual del progreso, celebracion pequena, seguimiento).\n\nResponde UNICAMENTE con este JSON, sin explicaciones ni markdown:\n{\n  "sagaName": "NOMBRE 2-3 PALABRAS EN MAYUSCULAS",\n  "objective": "descripcion del habito en una linea",\n  "weeklyMissions": [\n    {"name":"MISION","description":"descripcion","total":5,"stat":"claridad","law":1},\n    {"name":"MISION","description":"descripcion","total":7,"stat":"consistencia","law":3}\n  ],\n  "dailyTasks": [\n    {"name":"tarea ley 1","difficulty":"D","stat":"claridad","critical":true,"law":1},\n    {"name":"tarea ley 2","difficulty":"C","stat":"motivacion","critical":false,"law":2},\n    {"name":"tarea ley 3","difficulty":"E","stat":"consistencia","critical":true,"law":3},\n    {"name":"tarea ley 4","difficulty":"D","stat":"satisfaccion","critical":false,"law":4}\n  ]\n}\nStats validos: claridad, motivacion, consistencia, satisfaccion, identidad, sistemas.\nDificultades: E D C B A S (de mas facil a mas dificil).';
   el.innerHTML=
-  '<div class="cd">'+
-  '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'+
-  '<span class="seclbl" style="margin:0">Ficha de operador</span>'+
+  '<div class="hero">'+
+  '<span class="hero-lbl">Ficha de operador</span>'+
+  '<span class="hero-num"><span class="n" style="font-size:52px;color:#03110D;letter-spacing:-1px">'+rnk(d.level)+'</span></span>'+
+  '<span class="hero-sub">Nivel '+d.level+'</span>'+
+  '</div>'+
+  '<div class="cdw"><div class="cd">'+
+  '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'+
+  '<span class="seclbl" style="margin:0">Datos</span>'+
   '<button class="sbtn" onclick="togNE()">Editar nombre</button></div>'+
   '<div id="ne" style="display:none;margin-bottom:14px"><div class="frow">'+
   '<input id="ni" class="finp" maxlength="20" placeholder="Tu nombre" value="'+esc(S.player.name)+'" style="flex:1;height:42px">'+
@@ -503,70 +842,86 @@ function renderP(){
   '<div class="igrid">'+
   '<div class="icell"><span class="icll">Nombre</span><span class="iclv">'+esc(S.player.name)+'</span></div>'+
   '<div class="icell"><span class="icll">Nivel</span><span class="iclv">'+d.level+'</span></div>'+
-  '<div class="icell"><span class="icll">Rango</span><span class="iclv" style="font-size:clamp(12px,1.8vw,13px)">'+rnk(d.level)+'</span></div>'+
-  '<div class="icell"><span class="icll">Racha</span><span class="iclv">'+S.player.streak+' dias</span></div>'+
-  '<div class="icell"><span class="icll">Dia saga</span><span class="iclv">'+sd+'/90</span></div>'+
+  '<div class="icell"><span class="icll">Rango</span><span class="iclv" style="font-size:13px">'+rnk(d.level)+'</span></div>'+
+  '<div class="icell"><span class="icll">Racha</span><span class="iclv">'+S.player.streak+' días</span></div>'+
+  '<div class="icell"><span class="icll">Día saga</span><span class="iclv">'+sd+'/90</span></div>'+
   '<div class="icell"><span class="icll">XP total</span><span class="iclv">'+S.player.xp.toLocaleString()+'</span></div>'+
-  '</div></div>'+
-  '<div class="cd"><span class="seclbl">Foto de perfil</span>'+
-  '<div style="display:flex;align-items:center;gap:16px">'+
-  '<img src="'+(AV||BLANK)+'" style="width:72px;height:72px;object-fit:cover;border-radius:50%;border:2px solid #679CBC">'+
-  '<div><div style="font-size:clamp(12px,1.9vw,14px);color:#A38560;margin-bottom:10px;line-height:1.5">Sube cualquier imagen desde tu dispositivo.</div>'+
-  '<button class="pbtn" onclick="document.getElementById(\'avf\').click()">'+
-  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>'+
-  ' Subir foto</button></div></div></div>'+
-  '<div class="ck">'+
+  '</div></div></div>'+
+  '<div class="cdw"><div class="cd"><span class="seclbl">Foto de perfil</span>'+
+  '<div style="display:flex;align-items:center;gap:18px">'+
+  '<img src="'+(AV||BLANK)+'" style="width:60px;height:60px;object-fit:cover;border-radius:50%;border:1.5px solid rgba(103,156,188,.28)">'+
+  '<div><div style="font-size:12px;color:#A38560;margin-bottom:10px;line-height:1.6">Sube cualquier imagen desde tu dispositivo.</div>'+
+  '<button class="pbtn" onclick="document.getElementById(\'avf\').click()" style="font-size:11px;padding:9px 16px">'+
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>'+
+  ' Subir foto</button></div></div></div></div>'+
+  '<div class="cdw"><div class="ck">'+
   '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'+
-  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#679CBC" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>'+
-  '<span style="font-size:clamp(14px,2.2vw,17px);font-weight:800;color:#FEF1D5">Generador con las 4 Leyes</span></div>'+
-  '<div style="font-size:clamp(12px,1.9vw,14px);color:rgba(254,241,213,.65);margin-bottom:14px;line-height:1.6">'+
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#679CBC" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>'+
+  '<span style="font-size:15px;font-weight:600;color:#FEF1D5">Generador con las 4 Leyes</span></div>'+
+  '<div style="font-size:12px;color:rgba(254,241,213,.48);margin-bottom:14px;line-height:1.8">'+
   'Usa cualquier IA: ChatGPT, Gemini, Copilot, Claude&hellip;<br>'+
-  '<span style="color:#679CBC;font-weight:700">1</span> Copia el prompt &rarr; pegalo en tu IA &rarr; escribe tu habito.<br>'+
-  '<span style="color:#679CBC;font-weight:700">2</span> Copia el JSON que recibes &rarr; pegalo abajo.<br>'+
-  '<span style="color:#679CBC;font-weight:700">3</span> Presiona Procesar.'+
-  '<div style="margin-top:10px;padding:8px 10px;background:rgba(103,156,188,.1);border-radius:3px;font-size:clamp(10px,1.5vw,12px);color:#679CBC;font-weight:600">'+
-  'El prompt aplica automaticamente las 4 Leyes. Tu solo describes el habito.</div></div>'+
-  '<span class="flbl" style="color:rgba(254,241,213,.55)">Prompt para tu IA</span>'+
-  '<div class="pmbox" id="ptm" style="background:rgba(3,17,13,.35);border-color:rgba(103,156,188,.2);color:rgba(254,241,213,.65)">'+esc(PROMPT)+'</div>'+
-  '<div style="display:flex;justify-content:flex-end;margin-bottom:16px">'+
-  '<button class="sbtn" style="border-color:rgba(103,156,188,.35);color:#679CBC" onclick="cpPr()">'+
-  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'+
+  '<span style="color:#679CBC;font-weight:600">1</span> Copia el prompt → pégalo en tu IA → escribe tu hábito.<br>'+
+  '<span style="color:#679CBC;font-weight:600">2</span> Copia el JSON que recibes → pégalo abajo.<br>'+
+  '<span style="color:#679CBC;font-weight:600">3</span> Presiona Procesar.'+
+  '<div style="margin-top:10px;padding:8px 12px;background:rgba(103,156,188,.1);border-radius:6px;font-size:11px;color:#679CBC;font-weight:500">'+
+  'El prompt aplica automáticamente las 4 Leyes. Tú solo describes el hábito.</div></div>'+
+  '<span class="flbl" style="color:rgba(254,241,213,.38)">Prompt para tu IA</span>'+
+  '<div class="pmbox" id="ptm" style="background:rgba(3,17,13,.22);border-color:rgba(103,156,188,.18);color:rgba(254,241,213,.52)">'+esc(PROMPT_TEXT)+'</div>'+
+  '<div style="display:flex;justify-content:flex-end;margin-bottom:14px">'+
+  '<button class="sbtn" style="border-color:rgba(103,156,188,.22);color:#679CBC;background:transparent" onclick="cpPr()">'+
+  '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>'+
   ' Copiar prompt</button></div>'+
-  '<span class="flbl" style="color:rgba(254,241,213,.55)">Pega el JSON aqui</span>'+
-  '<textarea id="jin" class="finp" rows="6" style="background:rgba(3,17,13,.35);border-color:rgba(103,156,188,.2);color:#FEF1D5" placeholder=\'{"sagaName":"...","dailyTasks":[...]}\'></textarea>'+
+  '<span class="flbl" style="color:rgba(254,241,213,.38)">Pega el JSON aquí</span>'+
+  '<textarea id="jin" class="finp" rows="5" style="background:rgba(3,17,13,.22);border-color:rgba(103,156,188,.18);color:#FEF1D5" placeholder=\'{"sagaName":"...","dailyTasks":[...]}\'></textarea>'+
   '<div style="display:flex;justify-content:flex-end;margin-top:10px">'+
-  '<button class="pbtn" style="background:#679CBC;color:#0C324A" onclick="procJ()">'+
-  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'+
+  '<button class="pbtn" style="background:#679CBC;color:#0C324A;font-size:12px;padding:10px 20px" onclick="procJ()">'+
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'+
   ' Procesar</button></div>'+
-  '<div id="jerr" class="errmsg"></div><div id="jprop"></div></div>'+
-  '<div class="cd" style="border:1.5px solid '+(ov?'rgba(193,23,32,.3)':'rgba(12,50,74,.1)')+'">'+
+  '<div id="jerr" class="errmsg"></div><div id="jprop"></div></div></div>'+
+  '<div class="cdw"><div class="cd" style="border:1px solid '+(ov?'rgba(193,23,32,.18)':'rgba(3,17,13,.05)')+'">'+
   '<span class="seclbl">Modo sobrecargado</span>'+
-  '<div style="font-size:clamp(12px,1.9vw,14px);color:#A38560;margin-bottom:14px;line-height:1.6">'+
-  'Reduce tareas a solo las criticas y faciles. Baja la dificultad de las opcionales.<br>'+
-  '<span style="color:#C11720;font-size:clamp(10px,1.5vw,12px);font-weight:600">Se activa automaticamente si tu HP cae bajo 40.</span></div>'+
+  '<div style="font-size:12px;color:#A38560;margin-bottom:14px;line-height:1.7">'+
+  'Reduce tareas a solo las críticas y fáciles. Baja la dificultad de las opcionales.<br>'+
+  '<span style="color:#C11720;font-size:11px;font-weight:500">Se activa automáticamente si tu HP cae bajo 40.</span></div>'+
   '<div style="display:flex;align-items:center;gap:14px;cursor:pointer" onclick="togOv()">'+
-  '<button class="tglbtn" style="background:'+(ov?'#C11720':'#E0E0E0')+'"><div class="tgldot" style="left:'+(ov?'23':'3')+'px"></div></button>'+
-  '<div><div style="font-size:clamp(13px,2vw,15px);font-weight:700;color:'+(ov?'#C11720':'#A38560')+'">'+(ov?'Activo':'Inactivo')+'</div>'+
-  '<div style="font-size:clamp(11px,1.7vw,13px);color:#A38560;margin-top:1px">'+(ov?'Toca para desactivar':'Toca para activar')+'</div></div></div></div>'+
-  '<div class="cd"><span class="seclbl">Datos</span>'+
-  '<div style="font-size:clamp(12px,1.9vw,14px);color:#A38560;margin-bottom:12px">Borra todo el progreso y reinicia la app.</div>'+
+  '<button class="tglbtn" style="background:'+(ov?'#C11720':'#E0E0E0')+'"><div class="tgldot" style="left:'+(ov?'21':'3')+'px"></div></button>'+
+  '<div><div style="font-size:14px;font-weight:600;color:'+(ov?'#C11720':'#A38560')+'">'+(ov?'Activo':'Inactivo')+'</div>'+
+  '<div style="font-size:11px;color:#A38560;margin-top:1px">'+(ov?'Toca para desactivar':'Toca para activar')+'</div></div></div></div></div>'+
+  '<div class="cdw"><div class="cd"><span class="seclbl">Datos</span>'+
+  '<div style="font-size:12px;color:#A38560;margin-bottom:12px">Borra todo el progreso y reinicia la app.</div>'+
   '<button class="dbtn" onclick="resAll()">'+
-  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>'+
-  ' Resetear progreso</button></div>';
+  '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>'+
+  ' Resetear progreso</button></div></div>';
 }
+
+/* ── PROFILE ACTIONS ── */
 function togNE(){var d=document.getElementById('ne');d.style.display=d.style.display==='none'?'block':'none';}
 function savNm(){var v=(document.getElementById('ni').value||'').trim();if(!v)return;S.player.name=v;saveS();updHUD();renderP();toast('Nombre actualizado','#16302B');}
 function cpPr(){
-  var t=document.getElementById('ptm');
-  if(navigator.clipboard)navigator.clipboard.writeText(t.textContent).then(function(){toast('Prompt copiado','#0C324A');});
-  else{var r=document.createRange();r.selectNode(t);window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand('copy');window.getSelection().removeAllRanges();toast('Prompt copiado','#0C324A');}
+  function _fallback(txt){
+    var ta=document.createElement('textarea');
+    ta.value=txt;
+    ta.style.cssText='position:fixed;left:-9999px;top:-9999px;opacity:0';
+    document.body.appendChild(ta);
+    ta.focus();ta.select();
+    try{document.execCommand('copy');toast('Prompt copiado','#0C324A');}
+    catch(e){toast('No se pudo copiar automáticamente','#A38560',3000);}
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(PROMPT_TEXT)
+      .then(function(){toast('Prompt copiado','#0C324A');})
+      .catch(function(){_fallback(PROMPT_TEXT);});
+  }else{_fallback(PROMPT_TEXT);}
 }
 function togOv(){S.overloaded=!S.overloaded;saveS();renderP();toast(S.overloaded?'Modo sobrecargado activado':'Modo normal restaurado',S.overloaded?'#C11720':'#16302B');}
 function resAll(){
-  if(!confirm('Resetear todo el progreso?'))return;
+  if(!confirm('¿Resetear todo el progreso?'))return;
   ['opv5','op_v4','op_v3','op_v2','op_av','op_avatar'].forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
-  S=JSON.parse(JSON.stringify(DEF));AV='';saveS();updHUD();renderP();toast('Datos reseteados','#A38560');
+  S=JSON.parse(JSON.stringify(DEF));AV='';_histFilter=null;saveS();updHUD();renderP();toast('Datos reseteados','#A38560');
 }
+
+/* ── JSON PROCESSOR ── */
 function procJ(){
   var inp=document.getElementById('jin'),err=document.getElementById('jerr'),prop=document.getElementById('jprop');
   err.style.display='none';prop.innerHTML='';
@@ -575,7 +930,7 @@ function procJ(){
   var json=null,m=raw.match(/\{[\s\S]*\}/);
   if(m){try{json=JSON.parse(m[0]);}catch(e){}}
   if(!json){try{json=JSON.parse(raw);}catch(e){}}
-  if(!json){err.textContent='JSON invalido. Copia la respuesta completa de tu IA.';err.style.display='block';return;}
+  if(!json){err.textContent='JSON inválido. Copia la respuesta completa de tu IA.';err.style.display='block';return;}
   if(!json.sagaName&&!json.dailyTasks){err.textContent='Formato inesperado. Usa el prompt incluido.';err.style.display='block';return;}
   showProp(json,prop);
 }
@@ -584,38 +939,46 @@ function showProp(p,el){
   (p.dailyTasks||[]).forEach(function(t){
     var ln=t.law,lc=ln&&LAWS[ln]?LAWS[ln]:{col:'#A38560'};
     th+='<div class="proptk">';
-    if(ln)th+='<span style="background:'+lc.col+';color:#FEF1D5;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;flex-shrink:0">L'+ln+'</span>';
+    if(ln)th+='<span style="background:'+lc.col+';color:#FEF1D5;font-size:9px;font-weight:700;padding:2px 6px;border-radius:0;flex-shrink:0">L'+ln+'</span>';
     th+='<span class="'+tgcls(t.difficulty||'D')+'" style="flex-shrink:0">'+esc(t.difficulty||'D')+'</span>';
     th+='<span style="flex:1">'+esc(t.name)+'</span>';
-    if(t.critical)th+='<span style="font-size:10px;font-weight:700;color:#C11720;flex-shrink:0">\u2605 critica</span>';
+    if(t.critical)th+='<span style="font-size:10px;font-weight:600;color:#C11720;flex-shrink:0">★ crítica</span>';
     th+='</div>';
   });
   var mh='';
   (p.weeklyMissions||[]).forEach(function(m){
-    mh+='<div style="background:#E0E0E0;padding:9px 12px;margin-bottom:6px;border-radius:3px;font-size:clamp(12px,1.9vw,14px)"><strong>'+esc(m.name)+'</strong> <span style="color:#A38560;margin-left:8px">'+esc(m.description)+'</span></div>';
+    mh+='<div style="background:#E0E0E0;padding:9px 12px;margin-bottom:6px;border-radius:6px;font-size:13px"><strong style="color:#03110D">'+esc(m.name)+'</strong><span style="color:#A38560;margin-left:8px;font-size:12px">'+esc(m.description)+'</span></div>';
   });
   el.innerHTML='<div class="divider"></div><div class="propbox">'+
-    '<div style="font-size:clamp(9px,1.4vw,11px);font-weight:700;color:#679CBC;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Habito propuesto &mdash; revisa y confirma</div>'+
-    '<div class="propt">'+esc(p.sagaName||'Nuevo habito')+'</div>'+
+    '<div style="font-size:10px;font-weight:600;color:#679CBC;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px">Hábito propuesto — revisa y confirma</div>'+
+    '<div class="propt">'+esc(p.sagaName||'Nuevo hábito')+'</div>'+
     '<div class="props">'+esc(p.objective||'')+'</div>'+
-    '<div style="font-size:10px;font-weight:700;color:#A38560;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Misiones semanales</div>'+
-    '<div style="margin-bottom:12px">'+mh+'</div>'+
-    '<div style="font-size:10px;font-weight:700;color:#A38560;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Tareas diarias</div>'+
+    '<div style="font-size:10px;font-weight:600;color:#A38560;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Misiones semanales</div>'+
+    '<div style="margin-bottom:14px">'+mh+'</div>'+
+    '<div style="font-size:10px;font-weight:600;color:#A38560;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Tareas diarias</div>'+
     '<div style="margin-bottom:16px">'+th+'</div>'+
     '<div class="frow">'+
-    '<button class="pbtn" onclick=\'accM('+JSON.stringify(JSON.stringify(p))+')\'>\u2713 Activar habito</button>'+
+    '<button class="pbtn" onclick=\'accM('+JSON.stringify(JSON.stringify(p))+')\'>\u2713 Activar hábito</button>'+
     '<button class="dbtn" onclick="document.getElementById(\'jprop\').innerHTML=\'\'">Descartar</button>'+
     '</div></div>';
 }
 function accM(js){
   var p;try{p=JSON.parse(js);}catch(e){toast('Error al procesar','#C11720');return;}
-  var nt=(p.dailyTasks||[]).map(function(t,i){return{id:'t'+Date.now()+'_'+i,name:t.name,difficulty:t.difficulty||'D',stat:t.stat||'claridad',done:false,critical:!!t.critical,law:t.law||null};});
-  var nm=(p.weeklyMissions||[]).map(function(m,i){return{id:'m'+Date.now()+'_'+i,name:m.name,description:m.description,progress:0,total:m.total||5,stat:m.stat||'claridad',law:m.law||null};});
-  S.saga={name:p.sagaName||'Nuevo habito',objective:p.objective||'',startDate:new Date().toISOString(),totalDays:90};
-  S.weeklyMissions=S.weeklyMissions.concat(nm);S.dailyTasks=nt;S.lastDate=today();
-  saveS();toast('Habito activado con las 4 Leyes!','#0C324A',3000);go('m');
+  var ts=Date.now();
+  var nt=(p.dailyTasks||[]).map(function(t,i){return{id:'t'+ts+'_'+i,name:t.name,difficulty:t.difficulty||'D',stat:t.stat||'claridad',done:false,critical:!!t.critical,law:t.law||null};});
+  var nm=(p.weeklyMissions||[]).map(function(m,i){return{id:'m'+ts+'_'+i,name:m.name,description:m.description,progress:0,total:m.total||5,stat:m.stat||'claridad',law:m.law||null,active:i===0};});
+  S.saga={name:p.sagaName||'Nuevo hábito',objective:p.objective||'',startDate:new Date().toISOString(),totalDays:90};
+  S.weeklyMissions=S.weeklyMissions.concat(nm);
+  S.dailyTasks=nt;
+  S.lastDate=today();
+  saveS();
+  toast('¡Hábito activado con las 4 Leyes!','#0C324A',3000);
+  go('m');
 }
+
+/* ── BOOT ── */
 loadS();dailyReset();updHUD();renderM();
 </script>
 </body>
 </html>
+
